@@ -157,6 +157,33 @@ btn.onclick = ()=>{
   localStorage.setItem("lastPlay", today);
 };
 </script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyAiYCe7CJLhhiuz1WepRomurmm242iL6D8",
+  authDomain: "raspadinha-acaistel-3b477.firebaseapp.com",
+  projectId: "raspadinha-acaistel-3b477",
+  storageBucket: "raspadinha-acaistel-3b477.firebasestorage.app",
+  messagingSenderId: "581663716063",
+  appId: "1:581663716063:web:143bda86ba3cb76ee96f6a"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.salvarJogada = async (premio, codigo) => {
+  try {
+    await addDoc(collection(db, "jogadas"), {
+      premio: premio,
+      codigo: codigo,
+      data: new Date()
+    });
+  } catch (e) {
+    console.log("Erro:", e);
+  }
+};
+</script>
 </body>
 </html>
