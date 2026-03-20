@@ -53,7 +53,6 @@
     top: 0; left: 0;
     z-index: 2;
     touch-action: none;
-    cursor: crosshair;
   }
 
   .prize-behind {
@@ -79,7 +78,6 @@
     font-weight: bold;
     font-size: 16px;
     cursor: pointer;
-    transition: 0.2s;
   }
 
   #btn:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -94,7 +92,6 @@
     color: white;
     text-decoration: none;
     font-weight: bold;
-    box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
   }
 </style>
 </head>
@@ -104,18 +101,15 @@
 <div class="card">
   <img src="logo.png.jpeg" class="logo" alt="Açaístel">
   <h1>Raspadinha Açaístel</h1>
-  <p>Raspe e concorra a <b>Açaí grátis</b><br>1 chance por dia</p>
-
+  
   <div class="scratch-wrapper">
     <div class="prize-behind">REVELE SEU PRÊMIO!</div>
     <canvas id="scratch" width="300" height="180"></canvas>
   </div>
 
   <div id="result"></div>
-
   <button id="btn">REVELAR PRÊMIO</button>
-
-  <a id="zap" class="whatsapp" target="_blank">RESGATAR PRÊMIO NO WHATSAPP</a>
+  <a id="zap" class="whatsapp" target="_blank">RESGATAR NO WHATSAPP</a>
 </div>
 
 <script>
@@ -128,20 +122,15 @@ const zap = document.getElementById("zap");
 const today = new Date().toLocaleDateString();
 const lastPlay = localStorage.getItem("lastPlay");
 
-// Bloqueio Diário
 if (lastPlay === today) {
   btn.disabled = true;
   canvas.style.display = "none";
-  result.innerHTML = "<h3>Você já jogou hoje 😅<br>Volte amanhã!</h3>";
+  result.innerHTML = "<h3>Você já jogou hoje 😅</h3>";
 }
 
-const prizes = [
-  "🥤 Açaí 250ml", "🥤 Açaí 300ml", "🎁 14% OFF (300ml)", 
-  "🎁 11% OFF (500ml)", "🎁 8% OFF (700ml)"
-];
+const prizes = ["🥤 Açaí 250ml", "🥤 Açaí 300ml", "🎁 14% OFF", "🎁 11% OFF"];
 let prize = prizes[Math.floor(Math.random() * prizes.length)];
 
-// Cobertura da Raspadinha
 ctx.fillStyle = "#d4af37";
 ctx.fillRect(0,0,300,180);
 ctx.fillStyle = "#2b0a3d";
@@ -150,8 +139,22 @@ ctx.textAlign = "center";
 ctx.fillText("RASPE AQUI", 150, 100);
 
 let drawing = false;
-function getPos(e) {
+canvas.addEventListener("mousedown", () => drawing = true);
+window.addEventListener("mouseup", () => drawing = false);
+canvas.addEventListener("mousemove", (e) => {
+  if(!drawing) return;
   const rect = canvas.getBoundingClientRect();
-  return {
-    x: (e.touches ? e.touches[0].clientX : e.clientX) - rect.left,
-    y: (e.touches ? e.touches[0].
+  ctx.globalCompositeOperation = "destination-out";
+  ctx.beginPath();
+  ctx.arc(e.clientX - rect.left, e.clientY - rect.top, 20, 0, Math.PI*2);
+  ctx.fill();
+});
+
+// Toque para celular
+canvas.addEventListener("touchstart", (e) => { drawing = true; e.preventDefault(); });
+canvas.addEventListener("touchmove", (e) => {
+  if(!drawing) return;
+  const rect = canvas.getBoundingClientRect();
+  const touch = e.touches[0];
+  ctx.globalCompositeOperation = "destination-out";
+  ctx.beginPath
