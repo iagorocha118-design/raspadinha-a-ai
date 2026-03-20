@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raspadinha Açaístel</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+  color: white;
+  background: #1c022b url('https://www.transparenttextures.com/patterns/stardust.png');
+}
+
+.card {
+  width: 350px;
+  padding: 25px;
+  border-radius: 25px;
+  text-align: center;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 30px 60px rgba(0,0,0,0.7);
+}
+
+h1 { color: #ffcc66; }
+
+.scratch-wrapper {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 20px 0;
+  background: linear-gradient(145deg, #ffd700, #ffb300);
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#btn {
+  background: linear-gradient(to bottom, #6a0dad, #3c096c);
+  border: none;
+  padding: 14px;
+  width: 100%;
+  border-radius: 20px;
+  color: white;
+  font-weight: bold;
+}
+
+.whatsapp {
+  display: none;
+  margin-top: 15px;
+  background: #25d366;
+  padding: 14px;
+  border-radius: 50px;
+  color: white;
+  text-decoration: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>Raspadinha Açaístel</h1>
+  <p>Raspe e concorra a <b>Açaí grátis</b><br>1 chance por dia</p>
+
+  <div class="scratch-wrapper">
+    <canvas id="scratch" width="300" height="180"></canvas>
+  </div>
+
+  <div id="result"></div>
+
+  <button id="btn">REVELAR PRÊMIO</button>
+
+  <a id="zap" class="whatsapp" target="_blank">RESGATAR PRÊMIO</a>
+</div>
+
+<script>
+const canvas = document.getElementById("scratch");
+const ctx = canvas.getContext("2d");
+ctx.lineCap = "round";
+
+const btn = document.getElementById("btn");
+const result = document.getElementById("result");
+const zap = document.getElementById("zap");
+
+// BLOQUEIO DIÁRIO
+const today = new Date().toLocaleDateString();
+const lastPlay = localStorage.getItem("lastPlay");
+
+if (lastPlay === today) {
+  btn.disabled = true;
+  canvas.style.display = "none";
+  result.innerHTML = "<h3>Você já jogou hoje 😅<br>Volte amanhã!</h3>";
+}
+
+// PRÊMIOS
+const prizes = [
+  "🥤 Açaí 250ml",
+  "🥤 Açaí 300ml",
+  "🎁 14% OFF (300ml)",
+  "🎁 11% OFF (500ml)",
+  "🎁 8% OFF (700ml)"
+];
+
+let prize = prizes[Math.floor(Math.random() * prizes.length)];
+
+// DESENHO INICIAL
+ctx.fillStyle = "#d4af37";
+ctx.fillRect(0,0,300,180);
+ctx.fillStyle = "#000";
+ctx.fillText("RASPE AQUI", 90, 90);
+
+// RASPAGEM
+let drawing = false;
+
+canvas.addEventListener("mousedown", ()=> drawing=true);
+window.addEventListener("mouseup", ()=> drawing=false);
+
+canvas.addEventListener("mousemove", (e)=>{
+  if(!drawing) return;
+  ctx.globalCompositeOperation = "destination-out";
+  ctx.beginPath();
+  ctx.arc(e.offsetX, e.offsetY, 20, 0, Math.PI*2);
+  ctx.fill();
+});
+
+// BOTÃO
+btn.onclick = ()=>{
+  const codigo = Math.floor(100000 + Math.random() * 900000);
+
+  result.innerHTML = `
+    <h2>${prize}</h2>
+    <p>Código: ${codigo}</p>
+    <p style="color:#ffb300;">⚠️ Válido somente hoje!</p>
+  `;
+
+  zap.style.display = "block";
+  zap.href = "https://wa.me/5577981570174?text=" + encodeURIComponent(
+    "Oi! Ganhei na raspadinha 😍\n" + prize + "\nCódigo: " + codigo
+  );
+
+  btn.style.display = "none";
+
+  // SALVA BLOQUEIO
+  localStorage.setItem("lastPlay", today);
+};
+</script>
+
+</body>
+</html>
