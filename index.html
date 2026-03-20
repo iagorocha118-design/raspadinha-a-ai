@@ -1,160 +1,107 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Raspadinha Açaístel</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-
-<style>
-  body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Poppins', sans-serif;
-    color: white;
-    background: #1c022b url('https://www.transparenttextures.com/patterns/stardust.png');
-  }
-
-  .card {
-    width: 350px;
-    padding: 25px;
-    border-radius: 25px;
-    text-align: center;
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(15px);
-    box-shadow: 0 30px 60px rgba(0,0,0,0.7);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .logo {
-    width: 140px;
-    margin-bottom: 10px;
-    filter: drop-shadow(0 0 10px rgba(255, 179, 0, 0.6));
-  }
-
-  h1 { color: #ffcc66; margin: 10px 0; font-weight: 800; }
-
-  .scratch-wrapper {
-    position: relative;
-    width: 300px;
-    height: 180px;
-    border-radius: 20px;
-    overflow: hidden;
-    margin: 20px auto;
-    border: 3px solid #ffcc66;
-    background: #fff;
-  }
-
-  canvas {
-    position: absolute;
-    top: 0; left: 0;
-    z-index: 2;
-    touch-action: none;
-  }
-
-  .prize-behind {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1;
-    color: #2b0a3d;
-    font-weight: 800;
-  }
-
-  #btn {
-    background: linear-gradient(to bottom, #6a0dad, #3c096c);
-    border: none;
-    border-bottom: 4px solid #240046;
-    padding: 14px;
-    width: 100%;
-    border-radius: 20px;
-    color: white;
-    font-weight: bold;
-    font-size: 16px;
-    cursor: pointer;
-  }
-
-  #btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  .whatsapp {
-    display: none;
-    margin-top: 15px;
-    background: linear-gradient(to bottom, #25d366, #128c7e);
-    border: 2px solid #fff;
-    padding: 14px;
-    border-radius: 50px;
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raspadinha Açaístel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            background: #1c022b url('https://www.transparenttextures.com/patterns/stardust.png');
+        }
+        .card {
+            width: 350px;
+            padding: 25px;
+            border-radius: 25px;
+            text-align: center;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.7);
+        }
+        h1 { color: #ffcc66; margin-bottom: 5px; }
+        .scratch-wrapper {
+            position: relative;
+            width: 300px;
+            height: 180px;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 20px auto;
+            background: #fff; /* Fundo onde o prêmio aparece */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #prize-text {
+            color: #333;
+            font-weight: bold;
+            font-size: 1.2rem;
+            position: absolute;
+            z-index: 1;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            cursor: crosshair;
+        }
+        #btn {
+            background: linear-gradient(to bottom, #6a0dad, #3c096c);
+            border: none;
+            padding: 14px;
+            width: 100%;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        #btn:disabled { background: #555; cursor: not-allowed; }
+        .whatsapp {
+            display: none;
+            margin-top: 15px;
+            background: #25d366;
+            padding: 14px;
+            border-radius: 50px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
 </head>
-
 <body>
 
 <div class="card">
-  <img src="logo.png.jpeg" class="logo" alt="Açaístel">
-  <h1>Raspadinha Açaístel</h1>
-  
-  <div class="scratch-wrapper">
-    <div class="prize-behind">REVELE SEU PRÊMIO!</div>
-    <canvas id="scratch" width="300" height="180"></canvas>
-  </div>
+    <h1>Raspadinha Açaístel</h1>
+    <p>Raspe e concorra a <b>Açaí grátis</b><br>1 chance por dia</p>
 
-  <div id="result"></div>
-  <button id="btn">REVELAR PRÊMIO</button>
-  <a id="zap" class="whatsapp" target="_blank">RESGATAR NO WHATSAPP</a>
+    <div class="scratch-wrapper">
+        <div id="prize-text">Carregando...</div>
+        <canvas id="scratch" width="300" height="180"></canvas>
+    </div>
+
+    <div id="result"></div>
+    <button id="btn">REVELAR PRÊMIO</button>
+    <a id="zap" class="whatsapp" target="_blank">RESGATAR PRÊMIO</a>
 </div>
 
-<script>
-const canvas = document.getElementById("scratch");
-const ctx = canvas.getContext("2d");
-const btn = document.getElementById("btn");
-const result = document.getElementById("result");
-const zap = document.getElementById("zap");
+<script type="module">
+    // 1. INICIALIZAÇÃO FIREBASE
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const today = new Date().toLocaleDateString();
-const lastPlay = localStorage.getItem("lastPlay");
-
-if (lastPlay === today) {
-  btn.disabled = true;
-  canvas.style.display = "none";
-  result.innerHTML = "<h3>Você já jogou hoje 😅</h3>";
-}
-
-const prizes = ["🥤 Açaí 250ml", "🥤 Açaí 300ml", "🎁 14% OFF", "🎁 11% OFF"];
-let prize = prizes[Math.floor(Math.random() * prizes.length)];
-
-ctx.fillStyle = "#d4af37";
-ctx.fillRect(0,0,300,180);
-ctx.fillStyle = "#2b0a3d";
-ctx.font = "bold 20px Poppins";
-ctx.textAlign = "center";
-ctx.fillText("RASPE AQUI", 150, 100);
-
-let drawing = false;
-canvas.addEventListener("mousedown", () => drawing = true);
-window.addEventListener("mouseup", () => drawing = false);
-canvas.addEventListener("mousemove", (e) => {
-  if(!drawing) return;
-  const rect = canvas.getBoundingClientRect();
-  ctx.globalCompositeOperation = "destination-out";
-  ctx.beginPath();
-  ctx.arc(e.clientX - rect.left, e.clientY - rect.top, 20, 0, Math.PI*2);
-  ctx.fill();
-});
-
-// Toque para celular
-canvas.addEventListener("touchstart", (e) => { drawing = true; e.preventDefault(); });
-canvas.addEventListener("touchmove", (e) => {
-  if(!drawing) return;
-  const rect = canvas.getBoundingClientRect();
-  const touch = e.touches[0];
-  ctx.globalCompositeOperation = "destination-out";
-  ctx.beginPath
+    const firebaseConfig = {
+      apiKey: "AIzaSyAiYCe7CJLhhiuz1WepRomurmm242iL6D8",
+      authDomain: "raspadinha-acaistel-3b477.firebaseapp.com",
+      projectId: "raspadinha-acaistel-3b477",
+      storageBucket: "raspadinha-acaistel-3b477.firebasestorage.app",
+      messagingSenderId: "581663716063",
+      appId:
+        
